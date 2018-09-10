@@ -1,3 +1,6 @@
+import csv
+import numpy as np
+import math as mt
 # funcion para obtener la resta de los valores de cada cluster en la primera columna de cada
 # uno de ellos.
 def get_sub_matrix(matrix):
@@ -40,6 +43,7 @@ def get_min_pos_in_matrix(matrix):
     return pos_x, pos_y
 
 #------------------------------- MAIN ----------------------------------------#
+'''
 # Matriz de distancias para verficar si el algorithmo funciona.
 dist_matrix = [ [0.00, 0.71, 5.66, 3.61, 4.24, 3.20],
                 [0.71, 0.00, 4.95, 2.92, 3.54, 2.50],
@@ -63,7 +67,53 @@ val_c_two = dist_matrix[c_two]
 
 print "C_one", val_c_one
 print "C_two", val_c_two
+'''
+# Inicializando matrices petal y sepal
+petal_data = np.zeros((150, 2))
+sepal_data = np.zeros((150, 2))
 
+# Llenando matriz petal
+with open('data_set.csv') as File:
+    iris_data = csv.DictReader(File)
+    x = 0
+    for row in iris_data:
+        petal_data[x][0] = row['petal.length']
+        petal_data[x][1] = row['petal.width']
+        x += 1
+    print(petal_data)
+# Lleando matriz sepal
+with open('data_set.csv') as File:
+    iris_data = csv.DictReader(File)
+    x = 0
+    for row in iris_data:
+        sepal_data[x][0] = row['sepal.length']
+        sepal_data[x][1] = row['sepal.width']
+        x += 1
+# Impresion de todos los datos originales de las matrices sepal y petal
+'''
+print('.-------------------PETAL--------------------.')
+for row in range (0,150):
+    print(petal_data[row][0], petal_data[row][1])
+print('.-------------------SEPAL--------------------.')
+
+for row in range (0,150):
+    print(petal_data[row][0], petal_data[row][1])
+'''
+#inicializando matriz de distancias
+distance_matrix = np.zeros((150, 150))
+
+# Formula ((X1 - X2)^2 + (Y1 - Y2)^2)^(1/2)
+# Generando datos de la matriz de distancia.
+for x in range (0, 150):
+    for y in range(x, 150):
+        t_x = petal_data[x][0] - petal_data[y][0]
+        t_y = petal_data[x][1] - petal_data[y][1]
+        xy = pow(t_x, 2) + pow(t_y, 2)
+        distance_matrix[x][y] = mt.sqrt(xy)
+print('---------------------------MATRIZ DE DISTANCIA-----------------------------------')
+print(distance_matrix[0])
+
+    
 ## Teniendo los dos valores realizar las operaciones siguientes min(3.61,3.20)
 ## y asi sucesivamente con los demas datos. Luego eliminar esos 2 cluster de la
 ## matriz de distancia y poner este nuevo cluster en la matriz de distancia.
