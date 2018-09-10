@@ -4,20 +4,21 @@ import math as mt
 
 def get_pos_of_min_value(matrix, size):
     mm = matrix[0][1]
-    p_x, p_y = 0, 0
+    p_x, p_y = 0, 1
     for x in range(0, size):
         for y in range(x+1, size):
-            print("x: ",x," y:",y)
+            print("------------MM: ", mm, "------------------")
             if mm > dist_matrix[x][y] and (x+1) < size:
                 mm = dist_matrix[x][y]
                 p_x, p_y = x, y
     return p_x, p_y
-
-def get_minimums(cluster1, cluster2, size):
-    cluster_r = np.zeros(size-1)
-    for x in range(0, size-1):
+## AQUI ESTA EL PROBLEMA TIENES QUE CAMBIAR QUE VARIABLES QUEDAN
+def get_minimums(cluster1, cluster2, size, p_y):
+    cluster_r = np.zeros(size)
+    for x in range(0, size):
         cluster_r[x] = min(cluster1[x], cluster2[x])
     print('---------------MINIMO-----------------')
+    cluster_r = np.delete(cluster_r, p_y)
     print(cluster_r)
     return cluster_r
 
@@ -26,7 +27,7 @@ def do_union_of_clusters(matrix, p_x, p_y, size):
     row2 = matrix[p_y]
     col1 = np.zeros(size)
     col2 = np.zeros(size)
-    print(matrix[0][5])
+    print("---------------------X AND Y-------------------------")
     print(p_x, p_y)
     for x in range(0, size):
         col1[x] = matrix[x][p_y]
@@ -47,10 +48,10 @@ def do_union_of_clusters(matrix, p_x, p_y, size):
     matrix = np.delete(matrix, (p_y-1), axis=1)
 
     print("-------------MATRIX TEMPORAL-------------")
-    cluster_u = get_minimums(col1, col2, size)
-    tmp = np.zeros(4)
+    cluster_u = get_minimums(col1, col2, size, p_y)
+    tmp = np.zeros(size-2)
     matrix = np.insert(matrix, p_x, tmp, axis=0)
-    tmp = np.zeros(5)
+    tmp = np.zeros(size-1)
     matrix = np.insert(matrix, p_x, tmp, axis=1)
     print(matrix)
 
@@ -59,6 +60,7 @@ def do_union_of_clusters(matrix, p_x, p_y, size):
     for x in range(0, size-1):
         matrix[x][p_x] = cluster_u[x]
     print(matrix)
+    return matrix, matrix.shape[0]
 
 #------------------------------- MAIN ----------------------------------------#
 '''
@@ -137,16 +139,23 @@ print('---------------------------MATRIZ DE DISTANCIA---------------------------
 dist_matrix = np.zeros((6, 6))
 dist_matrix2 = [ [0.00, 0.71, 5.66, 3.61, 4.24, 3.20],
                 [0.71, 0.00, 4.95, 2.92, 3.54, 2.50],
-                [5.66, 4.95, 0.00, 2.95, 3.54, 2.50],
-                [3.61, 2.92, 2.95, 0.00, 1.00, 0.50], 
-                [4.24, 3.54, 3.54, 1.00, 0.00, 1.12], 
+                [5.66, 4.95, 0.00, 2.24, 1.41, 2.50],
+                [3.61, 2.92, 2.24, 0.00, 1.00, 0.50], 
+                [4.24, 3.54, 1.41, 1.00, 0.00, 1.12], 
                 [3.20, 2.50, 2.50, 0.50, 1.12, 0.00]]
 for x in range(0, 6):
     for y in range(0, 6):
         dist_matrix[x][y] = dist_matrix2[x][y] 
 
-p_x, p_y = get_pos_of_min_value(dist_matrix, 6)
-do_union_of_clusters(dist_matrix, p_x, p_y, 6)
+p_x, p_y = get_pos_of_min_value(dist_matrix, dist_matrix.shape[0])
+dis_matrix = do_union_of_clusters(dist_matrix, p_x, p_y, 6)
+n = dist_matrix.shape[0]
+print('--------------------N:',n, '-------------------------------')
+while n> 2:
+    dist_matrix, n = do_union_of_clusters(dist_matrix, p_x, p_y, n)
+    print('--------------------N:',n, '------------------------------')
+    p_x, p_y = get_pos_of_min_value(dist_matrix, dist_matrix.shape[0])
+
 ## Teniendo los dos valores realizar las operaciones siguientes min(3.61,3.20)
 ## y asi sucesivamente con los demas datos. Luego eliminar esos 2 cluster de la
 ## matriz de distancia y poner este nuevo cluster en la matriz de distancia.
