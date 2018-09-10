@@ -13,6 +13,14 @@ def get_pos_of_min_value(matrix, size):
                 p_x, p_y = x, y
     return p_x, p_y
 
+def get_minimums(cluster1, cluster2, size):
+    cluster_r = np.zeros(size-1)
+    for x in range(0, size-1):
+        cluster_r[x] = min(cluster1[x], cluster2[x])
+    print('---------------MINIMO-----------------')
+    print(cluster_r)
+    return cluster_r
+
 def do_union_of_clusters(matrix, p_x, p_y, size):
     row1 = matrix[p_x]
     row2 = matrix[p_y]
@@ -39,7 +47,19 @@ def do_union_of_clusters(matrix, p_x, p_y, size):
     matrix = np.delete(matrix, (p_y-1), axis=1)
 
     print("-------------MATRIX TEMPORAL-------------")
+    cluster_u = get_minimums(col1, col2, size)
+    tmp = np.zeros(4)
+    matrix = np.insert(matrix, p_x, tmp, axis=0)
+    tmp = np.zeros(5)
+    matrix = np.insert(matrix, p_x, tmp, axis=1)
     print(matrix)
+
+    print("-------------MATRIX FINAL-------------")
+    matrix[p_x] = cluster_u
+    for x in range(0, size-1):
+        matrix[x][p_x] = cluster_u[x]
+    print(matrix)
+
 #------------------------------- MAIN ----------------------------------------#
 '''
 # Matriz de distancias para verficar si el algorithmo funciona.
@@ -116,13 +136,13 @@ print('---------------------------MATRIZ DE DISTANCIA---------------------------
 
 dist_matrix = np.zeros((6, 6))
 dist_matrix2 = [ [0.00, 0.71, 5.66, 3.61, 4.24, 3.20],
-                [-1, 0.00, 4.95, 2.92, 3.54, 2.50],
-                [-1, -1, 0.00, 2.95, 3.54, 2.50],
-                [-1, -1, -1, 0.00, 1.00, 0.50], 
-                [-1, -1, -1, -1, 0.00, 1.12], 
-                [-1, -1, -1, -1, -1, 0.00]]
+                [0.71, 0.00, 4.95, 2.92, 3.54, 2.50],
+                [5.66, 4.95, 0.00, 2.95, 3.54, 2.50],
+                [3.61, 2.92, 2.95, 0.00, 1.00, 0.50], 
+                [4.24, 3.54, 3.54, 1.00, 0.00, 1.12], 
+                [3.20, 2.50, 2.50, 0.50, 1.12, 0.00]]
 for x in range(0, 6):
-    for y in range(x, 6):
+    for y in range(0, 6):
         dist_matrix[x][y] = dist_matrix2[x][y] 
 
 p_x, p_y = get_pos_of_min_value(dist_matrix, 6)
