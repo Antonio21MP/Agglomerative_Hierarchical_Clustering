@@ -1,6 +1,17 @@
 import csv
 import numpy as np
 import math as mt
+'''
+import plotly
+plotly.tools.set_credentials_file(username='AntonioMP', api_key='gkG6ymItx5uUmdKT46KA')
+import plotly.plotly as py
+import plotly.figure_factory as ff
+
+def create_dendogram(matrix):  
+    dendro = ff.create_dendrogram(matrix)
+    dendro['layout'].update({'width':1366, 'height':768})
+    py.iplot(dendro, filename='dendogram')
+'''
 
 def get_pos_of_min_value(matrix, size):
     mm = matrix[0][1]
@@ -9,12 +20,12 @@ def get_pos_of_min_value(matrix, size):
         for y in range(x+1, size):
             #print("------------MM: ", mm, "------------------")
             if mm > matrix[x][y] and (x+1) < size:
-                print('MM:',mm)
-                print('Menor:',matrix[x][y])
+                #print('MM:',mm)
+                #print('Menor:',matrix[x][y])
                 mm = matrix[x][y]
-                print('x: ',x,'y: ',y)
+                #print('x: ',x,'y: ',y)
                 p_x, p_y = x, y
-
+    print('MENOR: ',mm)
     return p_x, p_y
 ## AQUI ESTA EL PROBLEMA TIENES QUE CAMBIAR QUE VARIABLES QUEDAN
 def get_minimums(cluster1, cluster2, size, p_y):
@@ -27,25 +38,14 @@ def get_minimums(cluster1, cluster2, size, p_y):
     return cluster_r
 
 def do_union_of_clusters(matrix, p_x, p_y, size):
-    row1 = matrix[p_x]
-    row2 = matrix[p_y]
     col1 = np.zeros(size)
     col2 = np.zeros(size)
-    print("---------------------X AND Y-------------------------")
+    print("---------------------CLUSTERS A UNIR-------------------------")
     print(p_x, p_y)
     for x in range(0, size):
         col1[x] = matrix[x][p_y]
         col2[x] = matrix[x][p_x]
-    '''
-    print("----------------R1-----------------")
-    print(row1)
-    print("----------------R2-----------------")
-    print(row2)
-    print("----------------C1-----------------")
-    print(col1)
-    print("----------------C2-----------------")
-    print(col2)
-    '''
+
     matrix = np.delete(matrix, (p_x), axis=0)
     matrix = np.delete(matrix, (p_y-1), axis=0)
     matrix = np.delete(matrix, (p_x), axis=1)
@@ -64,17 +64,19 @@ def do_union_of_clusters(matrix, p_x, p_y, size):
     for x in range(0, size-1):
         matrix[x][p_x] = cluster_u[x]
     print(matrix)
-
     return matrix, matrix.shape[0]
 
 def create_agglomerative_matrix(matrix):
     p_x, p_y = get_pos_of_min_value(matrix, matrix.shape[0])
     n = matrix.shape[0]
-    print('--------------------TAMA;O:',n,'-------------------------------')
+    print("TAMA;O: ",n)
+    cc = 0
     while n> 2:
         matrix, n = do_union_of_clusters(matrix, p_x, p_y, n)
-        print('--------------------TAMA;O:',n, '------------------------------')
+        print("TAMA;O: ",n)
         p_x, p_y = get_pos_of_min_value(matrix, matrix.shape[0])
+        cc += 1
+    print('UNIONES: ',cc)
     return matrix
 
 def main():
@@ -108,6 +110,7 @@ def main():
             xy = pow(p_x, 2) + pow(p_y, 2) + pow(s_x, 2) + pow(s_y, 2)
             dist_matrix[x][y] = mt.sqrt(xy)
     print('---------------------------MATRIZ DE DISTANCIA (IRIS)-----------------------------------')
+    #create_dendogram(dist_matrix)
     print(dist_matrix)
     '''
     print('.-------------------IRIS--------------------.')
