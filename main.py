@@ -116,7 +116,6 @@ def main():
     for i in range(150):
         threads[i].join()
     print(dist_matrix)
-
     final = create_agglomerative_matrix(dist_matrix)
     print('---------------------------MATRIZ FINAL------------------------------')
     print(final)
