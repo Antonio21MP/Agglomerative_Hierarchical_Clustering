@@ -1,7 +1,6 @@
 import csv
 import numpy as np
 import math as mt
-'''
 import plotly
 plotly.tools.set_credentials_file(username='AntonioMP', api_key='gkG6ymItx5uUmdKT46KA')
 import plotly.plotly as py
@@ -11,7 +10,7 @@ def create_dendogram(matrix):
     dendro = ff.create_dendrogram(matrix)
     dendro['layout'].update({'width':1366, 'height':768})
     py.iplot(dendro, filename='dendogram')
-'''
+
 
 def get_pos_of_min_value(matrix, size):
     mm = matrix[0][1]
@@ -112,35 +111,12 @@ def main():
     print('---------------------------MATRIZ DE DISTANCIA (IRIS)-----------------------------------')
     #create_dendogram(dist_matrix)
     print(dist_matrix)
-    '''
-    print('.-------------------IRIS--------------------.')
-    for row in range (0,150):
-        print(iris_matrix[row][0], iris_matrix[row][1], iris_matrix[row][2], iris_matrix[row][3])
-    print('---------------------------MATRIZ DE DISTANCIA (PRUEBA)-----------------------------------')
-    # Matriz de pruebas
-    dist_matrix = np.zeros((6, 6))
-    dist_matrix2 = [ [0.00, 0.71, 5.66, 3.61, 4.24, 3.20],
-                    [0.71, 0.00, 4.95, 2.92, 3.54, 2.50],
-                    [5.66, 4.95, 0.00, 2.24, 1.41, 2.50],
-                    [3.61, 2.92, 2.24, 0.00, 1.00, 0.50], 
-                    [4.24, 3.54, 1.41, 1.00, 0.00, 1.12], 
-                    [3.20, 2.50, 2.50, 0.50, 1.12, 0.00]]
-    for x in range(0, 6):
-        for y in range(0, 6):
-            dist_matrix[x][y] = dist_matrix2[x][y] 
     
-    print(dist_matrix)
-    '''
     final = create_agglomerative_matrix(dist_matrix)
     #dis_matrix, n = do_union_of_clusters(dist_matrix, p_x, p_y, dist_matrix.shape[0])
     #final_matrix = create_agglomerative_matrix(dis_matrix, p_x, p_y)
     print('---------------------------MATRIZ FINAL------------------------------')
     print(final)
-
-    ## Teniendo los dos valores realizar las operaciones siguientes min(3.61,3.20)
-    ## y asi sucesivamente con los demas datos. Luego eliminar esos 2 cluster de la
-    ## matriz de distancia y poner este nuevo cluster en la matriz de distancia.
-    # Impresion de todos los datos originales de las matrices sepal y petal
 
 
 main()
